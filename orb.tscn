@@ -1,0 +1,82 @@
+[gd_scene format=3 uid="uid://dxxo4xdlvjwjc"]
+
+[ext_resource type="Script" uid="uid://o3p8uc3qy22d" path="res://petorb.gd" id="1_ogqpy"]
+
+[sub_resource type="Gradient" id="Gradient_aqk2v"]
+colors = PackedColorArray(0.6306838, 0.7071901, 0.51810306, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_geq30"]
+gradient = SubResource("Gradient_aqk2v")
+fill = 1
+fill_from = Vector2(0.4949495, 0.5050505)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_036b0"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.43, 0.39732003, 0.2666, 0.15686275)
+albedo_texture = SubResource("GradientTexture2D_geq30")
+
+[sub_resource type="SphereMesh" id="SphereMesh_bskwk"]
+radius = 0.8
+
+[sub_resource type="Gradient" id="Gradient_036b0"]
+offsets = PackedFloat32Array(0, 0.88554215)
+colors = PackedColorArray(0.63366294, 0.66286045, 0.60734856, 1, 0.75, 0.646875, 0.1875, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_7nvox"]
+gradient = SubResource("Gradient_036b0")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_aqk2v"]
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0.7, 0.62125, 0.525, 0.58431375)
+
+[sub_resource type="SphereMesh" id="SphereMesh_aqk2v"]
+material = SubResource("StandardMaterial3D_aqk2v")
+radius = 0.08
+height = 0.16
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_bskwk"]
+
+[node name="Orb" type="Node3D" unique_id=34859554]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0, 0)
+script = ExtResource("1_ogqpy")
+
+[node name="OrbVis" type="MeshInstance3D" parent="." unique_id=981483331]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.092926025, -0.041189194, 0.040188313)
+material_override = SubResource("StandardMaterial3D_036b0")
+mesh = SubResource("SphereMesh_bskwk")
+
+[node name="wispglow" type="Sprite3D" parent="." unique_id=1703263000]
+pixel_size = 0.05
+billboard = 1
+texture = SubResource("GradientTexture2D_7nvox")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1630125944]
+light_color = Color(0.723257, 0.5074589, 0.35971248, 1)
+light_energy = 6.361
+shadow_enabled = true
+omni_range = 6.215
+omni_attenuation = 1.99
+
+[node name="Trail" type="CPUParticles3D" parent="OmniLight3D" unique_id=535193006]
+amount = 80
+lifetime = 2.0
+mesh = SubResource("SphereMesh_aqk2v")
+gravity = Vector3(0, 0, 0)
+initial_velocity_min = 0.05
+initial_velocity_max = 0.2
+scale_amount_min = 0.1
+scale_amount_max = 0.5
+
+[node name="PetInteractionArea" type="Area3D" parent="." unique_id=1033764745]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PetInteractionArea" unique_id=1352452875]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, -0.092926025, -0.041189194, 0.040188313)
+shape = SubResource("SphereShape3D_bskwk")
+
+[connection signal="body_entered" from="PetInteractionArea" to="." method="_on_pet_interaction_area_body_entered"]
+[connection signal="body_exited" from="PetInteractionArea" to="." method="_on_pet_interaction_area_body_exited"]
